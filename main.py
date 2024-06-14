@@ -108,6 +108,9 @@ class Minesweeper:
             messagebox.showinfo("Minesweeper", "Congratulations, You won!")
         else:
             messagebox.showinfo("Minesweeper", "Game Over. You hit a mine.")
+        self.frame.destroy()
+        self.mine_count_label.destroy()
+        main_menu = MainMenu(self.master)
 
 class MainMenu:
     def __init__(self, master):
