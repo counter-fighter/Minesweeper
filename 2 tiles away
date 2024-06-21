@@ -120,8 +120,8 @@ class Minesweeper:
 
     def on_leave(self, r, c):
         if self.revealed[r][c]:
-            for i in range(max(0, r-1), min(self.rows, r+2)):
-                for j in range(max(0, c-1), min(self.cols, c+2)):
+            for i in range(max(0, r-2), min(self.rows, r+3)):
+                for j in range(max(0, c-2), min(self.cols, c+3)):
                     if not self.revealed[i][j]:
                         self.buttons[(i, j)].config(bg="SystemButtonFace")
 
