@@ -1,8 +1,9 @@
 import random
 import tkinter as tk
 from tkinter import messagebox
+
 class Minesweeper:
-    def __init__(self, master, rows=10, cols=10, mines=10):
+    def __init__(self, master, rows, cols, mines):
         self.master = master
         self.rows = rows
         self.cols = cols
@@ -11,7 +12,6 @@ class Minesweeper:
         self.flags = 0
         self.create_widgets()
         self.setup_game()
-        
 
     def create_widgets(self):
         self.frame = tk.Frame(self.master)
@@ -110,9 +110,6 @@ class Minesweeper:
             messagebox.showinfo("Minesweeper", "Congratulations, You won!")
         else:
             messagebox.showinfo("Minesweeper", "Game Over. You hit a mine.")
-        self.frame.destroy()
-        self.mine_count_label.destroy()
-        main_menu = MainMenu(self.master)
 
     def on_enter(self, r, c):
         if self.revealed[r][c]:
@@ -143,7 +140,7 @@ class MainMenu:
 
         self.mines_label = tk.Label(self.frame, text="Number of Mines:")
         self.mines_label.grid(row=1, column=0, padx=5, pady=5)
-        self.mines_var = tk.IntVar(value=10)
+        self.mines_var = tk.IntVar(value=20)
         self.mines_entry = tk.Entry(self.frame, textvariable=self.mines_var)
         self.mines_entry.grid(row=1, column=1, padx=5, pady=5)
 
@@ -156,5 +153,3 @@ class MainMenu:
         mines = self.mines_var.get()
         self.frame.destroy()
         Minesweeper(self.master, rows, cols, mines)
-
-
