@@ -12,7 +12,6 @@ class Minesweeper:
         self.flags = 0
         self.create_widgets()
         self.setup_game()
-        
 
     def create_widgets(self):
         self.frame = tk.Frame(self.master)
