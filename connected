@@ -1,7 +1,6 @@
 import tkinter as tk
 from tkinter import messagebox
 import random
-from minesweeper import MainMenu, Minesweeper
 
 class Minesweeper:
     def __init__(self, master, rows, cols, mines):
@@ -163,3 +162,7 @@ class MainMenu:
         self.frame.destroy()
         Minesweeper(self.master, rows, cols, mines)
 
+if __name__ == "__main__":
+    root = tk.Tk()
+    main_menu = MainMenu(root)
+    root.mainloop()
