@@ -22,6 +22,8 @@ class Minesweeper:
             for c in range(self.cols):
                 button = tk.Button(self.frame, width=2, height=1, command=lambda r=r, c=c: self.on_left_click(r, c))
                 button.bind("<Button-3>", lambda event, r=r, c=c: self.on_right_click(r, c))
+                button.bind("<Enter>", lambda event, r=r, c=c: self.on_enter(r, c))
+                button.bind("<Leave>", lambda event, r=r, c=c: self.on_leave(r, c))
                 button.grid(row=r, column=c)
                 self.buttons[(r, c)] = button
 
@@ -111,6 +113,20 @@ class Minesweeper:
         self.frame.destroy()
         self.mine_count_label.destroy()
         main_menu = MainMenu(self.master)
+
+    def on_enter(self, r, c):
+        if self.revealed[r][c]:
+            for i in range(max(0, r-1), min(self.rows, r+2)):
+                for j in range(max(0, c-1), min(self.cols, c+2)):
+                    if not self.revealed[i][j]:
+                        self.buttons[(i, j)].config(bg="darkgray")
+
+    def on_leave(self, r, c):
+        if self.revealed[r][c]:
+            for i in range(max(0, r-1), min(self.rows, r+2)):
+                for j in range(max(0, c-1), min(self.cols, c+2)):
+                    if not self.revealed[i][j]:
+                        self.buttons[(i, j)].config(bg="SystemButtonFace")
 
 class MainMenu:
     def __init__(self, master):
