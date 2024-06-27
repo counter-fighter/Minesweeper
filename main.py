@@ -1,11 +1,8 @@
 import tkinter as tk
 from tkinter import messagebox
-# from liar import Liar, LiarM
-from minesweeper import Minesweeper, MainMenu
-#minesweeper: Minesweeper, MainMenu
-#liar: Liar, LiarM
+from main_menu import load_main_menu
 
 if __name__ == "__main__":
     root = tk.Tk()
-    main_menu = MainMenu(root)
+    load_main_menu(root)
     root.mainloop()

@@ -1,11 +1,11 @@
 import tkinter as tk
 from tkinter import messagebox
 import random
-from minesweeper import MainMenu, Minesweeper
+from minesweeper import Minesweeper
 
 class Liar(Minesweeper):
-    def __init__(self, master, rows, cols, mines):
-        super().__init__(master, rows, cols, mines)
+    def __init__(self, master, rows, cols, mines, load_main_menu):
+        super().__init__(master, rows, cols, mines, load_main_menu)
 
     def calculate_numbers(self):
         for r in range(self.rows):
@@ -38,14 +38,3 @@ class Liar(Minesweeper):
                 for j in range(max(0, c-1), min(self.cols, c+2)):
                     if self.grid[i][j] != -1 and not self.revealed[i][j]:
                         self.reveal_cell(i, j)
-
-class LiarM(MainMenu):
-    def __init__(self, master):
-        super().__init__(master)
-
-    def start_game(self):
-        rows = self.board_size_var.get()
-        cols = self.board_size_var.get()
-        mines = self.mines_var.get()
-        self.frame.destroy()
-        Liar(self.master, rows, cols, mines)
