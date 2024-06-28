@@ -1,5 +1,7 @@
 import tkinter as tk
 import random
+from tkinter import messagebox
+import json
 from minesweeper import Minesweeper
 
 class Liar(Minesweeper):
@@ -37,3 +39,40 @@ class Liar(Minesweeper):
                 for j in range(max(0, c-1), min(self.cols, c+2)):
                     if self.grid[i][j] != -1 and not self.revealed[i][j]:
                         self.reveal_cell(i, j)
+
+    def continue_game(self):
+        try:
+            with open('game_state.json', 'r') as f:
+                game_state = json.load(f)
+
+            self.rows = game_state['rows']
+            self.cols = game_state['cols']
+            self.mines = game_state['mines']
+            self.grid = game_state['grid']
+            self.revealed = game_state['revealed']
+            self.flagged = game_state['flagged']
+
+            self.frame.destroy()
+            self.create_widgets()
+
+            for r in range(self.rows):
+                for c in range(self.cols):
+                    if self.revealed[r][c]:
+                        self.buttons[(r, c)].config(relief=tk.SUNKEN, state=tk.DISABLED)
+                        if self.grid[r][c] == -1:
+                            self.buttons[(r, c)].config(text="M", bg="red")
+                        elif self.grid[r][c] > 0:
+                            self.buttons[(r, c)].config(text=str(self.grid[r][c]))
+                        else:
+                            self.buttons[(r, c)].config(text="0")
+                    elif self.flagged[r][c]:
+                        self.buttons[(r, c)].config(text="F")
+                        self.flags += 1
+
+
+            self.mine_count_label.config(text=f"Mines: {self.mines - self.flags}")
+
+        except FileNotFoundError:
+            messagebox.showinfo("Minesweeper", "No saved game to continue.")
+        except Exception as e:
+            messagebox.showerror("Minesweeper", f"Failed to load game state: {e}")

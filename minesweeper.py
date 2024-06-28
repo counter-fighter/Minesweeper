@@ -1,8 +1,8 @@
+import json
 import random
 import time
 import tkinter as tk
 from tkinter import messagebox
-
 
 selectionbar_color = '#eff5f6'
 sidebar_color = '#F5E1FD'
@@ -10,26 +10,42 @@ header_color = '#53366b'
 visualisation_frame_color = "#ffffff"
 
 class Minesweeper:
-    def __init__(self, master, rows, cols, mines, load_main_menu):
+    def __init__(self, master, rows=10, cols=10, mines=10, load_main_menu=None):
         self.master = master
         self.rows = rows
         self.cols = cols
         self.mines = mines
         self.buttons = {}
         self.flags = 0
+        self.mine_count_label = None
         self.create_widgets()
         self.setup_game()
         self.load_main_menu = load_main_menu
-
+        self.master.protocol("WM_DELETE_WINDOW", self.on_close)
+        
     def create_widgets(self):
+        # Set up frame
         self.frame = tk.Frame(self.master)
-        self.frame.pack()
-        self.mine_count_label = tk.Label(self.master, text=f"Mines: {self.mines}")
-        self.mine_count_label.pack()
+        self.frame.grid(row=1, column=0, columnspan=10)
+        # Add help menu
+        self.menu_bar = tk.Menu(self.master)
+        self.master.config(menu=self.menu_bar)
+        help_menu = tk.Menu(self.menu_bar, tearoff=False)
+        self.menu_bar.add_cascade(label="Help", menu=help_menu)
+        help_menu.add_command(label="Return to Main Menu", command=self.Main_Menu_Click)
+        help_menu.add_command(label="Rule", command=self.Rule_Click)
+        # Add Mine Count
+        if self.mine_count_label is None:
+          self.mine_count_label = tk.Label(self.master, text=f"Mines: {self.mines}")
+          self.mine_count_label.grid(row=self.rows + 1, column=0, columnspan=self.cols, pady=5)
+        else:
+            self.mine_count_label.config(text=f"Mines: {self.mines}")
+        #Set up button
         for r in range(self.rows):
             for c in range(self.cols):
                 button = tk.Button(self.frame, width=2, height=1, command=lambda r=r, c=c: self.on_left_click(r, c))
                 button.bind("<Button-3>", lambda event, r=r, c=c: self.on_right_click(r, c))
+                # For Highlight Clue
                 button.bind("<Enter>", lambda event, r=r, c=c: self.on_enter(r, c))
                 button.bind("<Leave>", lambda event, r=r, c=c: self.on_leave(r, c))
                 button.grid(row=r, column=c)
@@ -101,6 +117,21 @@ class Minesweeper:
                     if not self.revealed[i][j]:
                         self.reveal_cell(i, j)
 
+    # To Highlight Clue
+    def on_enter(self, r, c):
+        if self.revealed[r][c]:
+            for i in range(max(0, r-1), min(self.rows, r+2)):
+                for j in range(max(0, c-1), min(self.cols, c+2)):
+                    if not self.revealed[i][j]:
+                        self.buttons[(i, j)].config(bg="darkgray")
+
+    def on_leave(self, r, c):
+        if self.revealed[r][c]:
+            for i in range(max(0, r-1), min(self.rows, r+2)):
+                for j in range(max(0, c-1), min(self.cols, c+2)):
+                    if not self.revealed[i][j]:
+                        self.buttons[(i, j)].config(bg="SystemButtonFace")
+
     def check_win(self):
         for r in range(self.rows):
             for c in range(self.cols):
@@ -118,20 +149,81 @@ class Minesweeper:
             messagebox.showinfo("Minesweeper", "Congratulations, You won!")
         else:
             messagebox.showinfo("Minesweeper", "Game Over. You hit a mine.")
+        self.save_game_state()
         self.frame.destroy()
         self.mine_count_label.destroy()
         self.load_main_menu(self.master)
 
-    def on_enter(self, r, c):
-        if self.revealed[r][c]:
-            for i in range(max(0, r-1), min(self.rows, r+2)):
-                for j in range(max(0, c-1), min(self.cols, c+2)):
-                    if not self.revealed[i][j]:
-                        self.buttons[(i, j)].config(bg="darkgray")
+    def Main_Menu_Click(self):
+        self.save_game_state()    
+        self.frame.destroy()
+        self.mine_count_label.destroy()
+        self.load_main_menu(self.master)
 
-    def on_leave(self, r, c):
-        if self.revealed[r][c]:
-            for i in range(max(0, r-1), min(self.rows, r+2)):
-                for j in range(max(0, c-1), min(self.cols, c+2)):
-                    if not self.revealed[i][j]:
-                        self.buttons[(i, j)].config(bg="SystemButtonFace")
+    def Rule_Click(self):
+        messagebox.showinfo("Rule", "Explain the rule here :D")
+
+    def on_close(self):
+        self.save_game_state()
+        self.master.destroy()
+
+    def save_game_state(self):
+        game_state = {
+            'rows': self.rows,
+            'cols': self.cols,
+            'mines': self.mines,
+            'grid': self.grid,
+            'revealed': self.revealed,
+            'flagged': self.flagged
+        }
+        with open('game_state.json', 'w') as f:
+            json.dump(game_state, f)
+
+    def load_game_state(self):
+        try:
+            with open('game_state.json', 'r') as f:
+                game_state = json.load(f)
+            self.rows = game_state['rows']
+            self.cols = game_state['cols']
+            self.mines = game_state['mines']
+            self.grid = game_state['grid']
+            self.revealed = game_state['revealed']
+            self.flagged = game_state['flagged']
+        except FileNotFoundError:
+            pass
+
+    def continue_game(self):
+        try:
+            with open('game_state.json', 'r') as f:
+                game_state = json.load(f)
+
+            self.rows = game_state['rows']
+            self.cols = game_state['cols']
+            self.mines = game_state['mines']
+            self.grid = game_state['grid']
+            self.revealed = game_state['revealed']
+            self.flagged = game_state['flagged']
+
+            self.frame.destroy()
+            self.create_widgets()
+
+            for r in range(self.rows):
+                for c in range(self.cols):
+                    if self.revealed[r][c]:
+                        self.buttons[(r, c)].config(relief=tk.SUNKEN, state=tk.DISABLED)
+                        if self.grid[r][c] == -1:
+                            self.buttons[(r, c)].config(text="M", bg="red")
+                        elif self.grid[r][c] > 0:
+                            self.buttons[(r, c)].config(text=str(self.grid[r][c]))
+                        else:
+                            self.buttons[(r, c)].config(text="")
+                    elif self.flagged[r][c]:
+                        self.buttons[(r, c)].config(text="F")
+                        self.flags += 1
+
+            self.mine_count_label.config(text=f"Mines: {self.mines - self.flags}")
+
+        except FileNotFoundError:
+            messagebox.showinfo("Minesweeper", "No saved game to continue.")
+        except Exception as e:
+            messagebox.showerror("Minesweeper", f"Failed to load game state: {e}")

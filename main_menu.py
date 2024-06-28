@@ -1,5 +1,5 @@
 import tkinter as tk
-from tkinter import ttk
+from tkinter import ttk, messagebox
 from minesweeper import Minesweeper
 from liar import Liar
 from two_tiles_away import TwoTilesAway
@@ -53,8 +53,11 @@ class MainMenu:
         timer_toggle.grid(row=2, column=1, sticky=tk.W, padx=5)
         
         # Start button
-        start_button = ttk.Button(self.main_frame, text="Start Game", command=self.start_game)
-        start_button.grid(row=4, column=0, columnspan=4, pady=20)
+        start_button = ttk.Button(self.main_frame, text="New Game", command=self.start_game)
+        start_button.grid(row=4, column=1, columnspan=2, pady=20)
+        #Add Continue Game
+        continue_button = ttk.Button(self.main_frame, text="Continue", command=self.continue_game)
+        continue_button.grid(row=4, column=2, columnspan=2, pady=20)
         
         # Add some spacing
         for child in self.main_frame.winfo_children():
@@ -81,6 +84,11 @@ class MainMenu:
                 Liar(self.root, self.board_size_var.get(), self.board_size_var.get(), self.get_mines(), load_main_menu)
             case "Two Tiles Away":
                 TwoTilesAway(self.root, self.board_size_var.get(), self.board_size_var.get(), self.get_mines(), load_main_menu)
+    
+    def continue_game(self):
+        self.main_frame.destroy()
+        Minesweeper(self.root, load_main_menu=load_main_menu).continue_game()
+
 
 def load_main_menu(root):
     main_menu = MainMenu(root)
