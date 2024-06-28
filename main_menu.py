@@ -2,6 +2,7 @@ import tkinter as tk
 from tkinter import ttk
 from minesweeper import Minesweeper
 from liar import Liar
+from two_tiles_away import TwoTilesAway
 
 class MainMenu:
     def __init__(self, root):
@@ -63,7 +64,7 @@ class MainMenu:
         self.mode = tk.StringVar(value="Classic")
         mode_label = ttk.Label(self.main_frame, text="Select Game Mode")
         mode_label.grid(row=3, column=0, sticky=tk.W, pady=5)
-        mode_options = ["Classic", "Liar"]
+        mode_options = ["Classic", "Liar", "Two Tiles Away"]
         for index, mode in enumerate(mode_options):
             ttk.Radiobutton(self.main_frame, text=mode, variable=self.mode, value=mode).grid(row=3, column=1+index, sticky=tk.W, padx=5)
     
@@ -78,6 +79,8 @@ class MainMenu:
                 Minesweeper(self.root, self.board_size_var.get(), self.board_size_var.get(), self.get_mines(), load_main_menu)
             case "Liar":
                 Liar(self.root, self.board_size_var.get(), self.board_size_var.get(), self.get_mines(), load_main_menu)
+            case "Two Tiles Away":
+                TwoTilesAway(self.root, self.board_size_var.get(), self.board_size_var.get(), self.get_mines(), load_main_menu)
 
 def load_main_menu(root):
     main_menu = MainMenu(root)
