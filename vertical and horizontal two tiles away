@@ -12,20 +12,12 @@ class Vertical_Horizontal_TwoTilesAway(Minesweeper):
                 if self.grid[r][c] == -1:
                     continue
                 count = 0
-            
-            # Count vertically left 2 tiles
                 if r >= 2:
                     count += sum(1 for i in range(r-1, r-3, -1) if self.grid[i][c] == -1)
-            
-            # Count vertically right 2 tiles
                 if r < self.rows - 2:
                     count += sum(1 for i in range(r+1, r+3) if self.grid[i][c] == -1)
-            
-            # Count horizontally left 2 tiles
                 if c >= 2:
                     count += sum(1 for j in range(c-1, c-3, -1) if self.grid[r][j] == -1)
-            
-            # Count horizontally right 2 tiles
                 if c < self.cols - 2:
                     count += sum(1 for j in range(c+1, c+3) if self.grid[r][j] == -1)
             
