@@ -227,3 +227,4 @@ class Minesweeper:
             messagebox.showinfo("Minesweeper", "No saved game to continue.")
         except Exception as e:
             messagebox.showerror("Minesweeper", f"Failed to load game state: {e}")
+ 

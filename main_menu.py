@@ -92,3 +92,4 @@ class MainMenu:
 
 def load_main_menu(root):
     main_menu = MainMenu(root)
+ 
