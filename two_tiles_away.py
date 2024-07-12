@@ -1,11 +1,10 @@
-import random
 import tkinter as tk
 from tkinter import messagebox
 from minesweeper import Minesweeper
 
 class TwoTilesAway(Minesweeper):
-    def __init__(self, master, rows, cols, mines, load_main_menu):
-        super().__init__(master, rows, cols, mines, load_main_menu)
+    def __init__(self, master, rows, cols, mines, load_main_menu, enable_timer):
+        super().__init__(master, rows, cols, mines, load_main_menu, enable_timer)
 
     def Rule_Click(self):
         messagebox.showinfo("Rule", "The mines are hidden two tiles away from the number of the clue.")
