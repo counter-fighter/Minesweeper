@@ -8,6 +8,9 @@ class Liar(Minesweeper):
     def __init__(self, master, rows, cols, mines, load_main_menu):
         super().__init__(master, rows, cols, mines, load_main_menu)
 
+    def Rule_Click(self):
+        messagebox.showinfo("Rule", "The number of the clue always overshoot or undershoot the true value E.g. If the clue says 2, the actual number of surrounding mine could be either 1 or 3.")
+
     def calculate_numbers(self):
         for r in range(self.rows):
             for c in range(self.cols):
