@@ -36,8 +36,8 @@ class Minesweeper:
         help_menu.add_command(label="Rule", command=self.Rule_Click)
         # Add Mine Count
         if self.mine_count_label is None:
-          self.mine_count_label = tk.Label(self.master, text=f"Mines: {self.mines}")
-          self.mine_count_label.grid(row=self.rows + 1, column=0, columnspan=self.cols, pady=5)
+            self.mine_count_label = tk.Label(self.master, text=f"Mines: {self.mines}")
+            self.mine_count_label.grid(row=self.rows + 1, column=0, columnspan=self.cols, pady=5)
         else:
             self.mine_count_label.config(text=f"Mines: {self.mines}")
         #Set up button

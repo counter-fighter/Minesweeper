@@ -1,5 +1,7 @@
 import tkinter as tk
 import random
+from tkinter import messagebox
+import json
 from minesweeper import Minesweeper
 
 class vnh_clue(Minesweeper):
