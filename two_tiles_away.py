@@ -7,6 +7,9 @@ class TwoTilesAway(Minesweeper):
     def __init__(self, master, rows, cols, mines, load_main_menu):
         super().__init__(master, rows, cols, mines, load_main_menu)
 
+    def Rule_Click(self):
+        messagebox.showinfo("Rule", "The mines are hidden two tiles away from the number of the clue.")
+
     def calculate_numbers(self):
         for r in range(self.rows):
             for c in range(self.cols):
