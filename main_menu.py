@@ -17,8 +17,10 @@ class MainMenu:
         style.configure("TLabel", font=("Helvetica", 12), background='#2E4053', foreground='#FDFEFE')
         style.configure("TRadiobutton", font=("Helvetica", 12), background='#2E4053', foreground='#FDFEFE', indicatoron=0)
         style.configure("TCheckbutton", font=("Helvetica", 12), background='#2E4053', foreground='#FDFEFE')
-        style.configure("TButton", font=("Helvetica", 12, "bold"), background='#1ABC9C', foreground='#2E4053')
-        
+        style.configure("TButton", font=("Helvetica", 12, "bold"), background='#000000', foreground='#2E4053')
+        style.configure("Red.TButton", font=("Helvetica", 12, "bold"), background='#FF0000', foreground='#2E4053')
+        style.configure("Green.TButton", font=("Helvetica", 12, "bold"), background='#00CC00', foreground='#2E4053')
+
         # Set styles for hover effects
         style.map("TButton",
                   background=[('active', '#16A085')],
@@ -56,11 +58,14 @@ class MainMenu:
         
         # Start button
         start_button = ttk.Button(self.main_frame, text="New Game", command=self.start_game)
-        start_button.grid(row=4, column=1, columnspan=2, pady=20)
-        #Add Continue Game
-        continue_button = ttk.Button(self.main_frame, text="Continue", command=self.continue_game)
-        continue_button.grid(row=4, column=2, columnspan=2, pady=20)
-        
+        start_button.grid(row=4, column=1, pady=20, padx=5, sticky=tk.EW)
+        # Add Continue Game
+        continue_button = ttk.Button(self.main_frame, text="Continue", command=self.continue_game, style = "Green.TButton")
+        continue_button.grid(row=4, column=2, pady=20, padx=5, sticky=tk.EW)
+        # Add Quit Button
+        quit_button = ttk.Button(self.main_frame, text="Quit", command=self.quit_game, style="Red.TButton")
+        quit_button.grid(row=4, column=3, pady=20, padx=5, sticky=tk.EW)
+
         # Add some spacing
         for child in self.main_frame.winfo_children():
             child.grid_configure(padx=5, pady=5)
@@ -100,7 +105,8 @@ class MainMenu:
         except Exception as e:
             messagebox.showerror("Minesweeper", f"Failed to load game state: {e}")
 
+    def quit_game(self):
+        self.root.destroy()
 
 def load_main_menu(root):
     main_menu = MainMenu(root)
-  
