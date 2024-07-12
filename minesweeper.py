@@ -1,6 +1,6 @@
 import json
 import random
-import time
+import time, datetime
 import tkinter as tk
 from tkinter import messagebox
 
@@ -10,7 +10,7 @@ header_color = '#53366b'
 visualisation_frame_color = "#ffffff"
 
 class Minesweeper:
-    def __init__(self, master, rows=10, cols=10, mines=10, load_main_menu=None, enable_timer=False):
+    def __init__(self, master, enable_timer, rows=10, cols=10, mines=10, load_main_menu=None):
         self.master = master
         self.rows = rows
         self.cols = cols
@@ -24,11 +24,12 @@ class Minesweeper:
         self.master.protocol("WM_DELETE_WINDOW", self.on_close)
         self.done = False
         self.enable_timer = enable_timer
+        self.continue_time = 0
+        self.elapsed_time = 0
         if self.enable_timer:
             self.status = tk.Label(self.master, text='')
             self.status.grid(row=self.rows, column=0, columnspan=self.cols)
             self.start_time = time.time()
-            self.elapsed_time = 0
             self.update_status()
 
     def create_widgets(self):
@@ -158,14 +159,13 @@ class Minesweeper:
             messagebox.showinfo("Minesweeper", "Congratulations, You won!")
         else:
             messagebox.showinfo("Minesweeper", "Game Over. You hit a mine.")
-        self.save_game_state()
-        self.frame.destroy()
-        self.mine_count_label.destroy()
-        self.load_main_menu(self.master)
+        self.Main_Menu_Click()
 
     def Main_Menu_Click(self):
-        self.save_game_state()    
+        self.done = True
+        self.save_game_state()
         self.frame.destroy()
+        self.menu_bar.destroy()
         if self.enable_timer: self.status.destroy()
         self.mine_count_label.destroy()
         self.load_main_menu(self.master)
@@ -184,35 +184,25 @@ class Minesweeper:
             'mines': self.mines,
             'grid': self.grid,
             'revealed': self.revealed,
-            'flagged': self.flagged
+            'flagged': self.flagged,
+            'elapsed_time': self.elapsed_time,
+            'enable_timer': self.enable_timer
         }
         with open('game_state.json', 'w') as f:
             json.dump(game_state, f)
-
-    def load_game_state(self):
-        try:
-            with open('game_state.json', 'r') as f:
-                game_state = json.load(f)
-            self.rows = game_state['rows']
-            self.cols = game_state['cols']
-            self.mines = game_state['mines']
-            self.grid = game_state['grid']
-            self.revealed = game_state['revealed']
-            self.flagged = game_state['flagged']
-        except FileNotFoundError:
-            pass
 
     def continue_game(self):
         try:
             with open('game_state.json', 'r') as f:
                 game_state = json.load(f)
-
             self.rows = game_state['rows']
             self.cols = game_state['cols']
             self.mines = game_state['mines']
             self.grid = game_state['grid']
             self.revealed = game_state['revealed']
             self.flagged = game_state['flagged']
+            self.continue_time = game_state['elapsed_time']
+            self.enable_timer = game_state['enable_timer']
 
             self.frame.destroy()
             self.create_widgets()
@@ -238,3 +228,9 @@ class Minesweeper:
         except Exception as e:
             messagebox.showerror("Minesweeper", f"Failed to load game state: {e}")
   
+    def update_status(self):
+        self.elapsed_time = int(time.time() - self.start_time) + self.continue_time
+        delta = str(datetime.timedelta(seconds=self.elapsed_time))
+        if not self.done:
+            self.status.config(text='Timer: 'f'{delta}')
+            self.master.after(1000, self.update_status)  # Run again after 1 second

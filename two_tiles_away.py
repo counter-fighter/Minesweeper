@@ -3,8 +3,8 @@ from tkinter import messagebox
 from minesweeper import Minesweeper
 
 class TwoTilesAway(Minesweeper):
-    def __init__(self, master, rows, cols, mines, load_main_menu, enable_timer):
-        super().__init__(master, rows, cols, mines, load_main_menu, enable_timer)
+    def __init__(self, master, enable_timer, rows, cols, mines, load_main_menu):
+        super().__init__(master, enable_timer, rows, cols, mines, load_main_menu)
 
     def Rule_Click(self):
         messagebox.showinfo("Rule", "The mines are hidden two tiles away from the number of the clue.")

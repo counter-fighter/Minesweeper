@@ -1,5 +1,6 @@
 import tkinter as tk
 from tkinter import ttk, messagebox
+import json
 from minesweeper import Minesweeper
 from liar import Liar
 from two_tiles_away import TwoTilesAway
@@ -80,17 +81,24 @@ class MainMenu:
         self.main_frame.destroy()
         match self.mode.get():
             case "Classic":
-                Minesweeper(self.root, self.board_size_var.get(), self.board_size_var.get(), self.get_mines(), load_main_menu, timer_enabled)
+                Minesweeper(self.root, timer_enabled, self.board_size_var.get(), self.board_size_var.get(), self.get_mines(), load_main_menu)
             case "Liar":
-                Liar(self.root, self.board_size_var.get(), self.board_size_var.get(), self.get_mines(), load_main_menu, timer_enabled)
+                Liar(self.root, timer_enabled, self.board_size_var.get(), self.board_size_var.get(), self.get_mines(), load_main_menu)
             case "Two Tiles Away":
-                TwoTilesAway(self.root, self.board_size_var.get(), self.board_size_var.get(), self.get_mines(), load_main_menu, timer_enabled)
+                TwoTilesAway(self.root, timer_enabled, self.board_size_var.get(), self.board_size_var.get(), self.get_mines(), load_main_menu)
             case "Vertical and Horizontal Clue":
-                vnh_clue(self.root, self.board_size_var.get(), self.board_size_var.get(), self.get_mines(), load_main_menu, timer_enabled)
+                vnh_clue(self.root, timer_enabled, self.board_size_var.get(), self.board_size_var.get(), self.get_mines(), load_main_menu)
             
     def continue_game(self):
         self.main_frame.destroy()
-        Minesweeper(self.root, load_main_menu=load_main_menu).continue_game()
+        try:
+            with open('game_state.json', 'r') as f:
+                game_state = json.load(f)
+                Minesweeper(self.root, enable_timer=game_state['enable_timer'], load_main_menu=load_main_menu).continue_game()
+        except FileNotFoundError:
+            messagebox.showerror("Minesweeper", "File not found.")
+        except Exception as e:
+            messagebox.showerror("Minesweeper", f"Failed to load game state: {e}")
 
 
 def load_main_menu(root):
