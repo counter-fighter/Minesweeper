@@ -10,7 +10,7 @@ header_color = '#53366b'
 visualisation_frame_color = "#ffffff"
 
 class Minesweeper:
-    def __init__(self, master, rows=10, cols=10, mines=10, load_main_menu=None):
+    def __init__(self, master, rows=10, cols=10, mines=10, load_main_menu=None, enable_timer=False):
         self.master = master
         self.rows = rows
         self.cols = cols
@@ -23,11 +23,13 @@ class Minesweeper:
         self.load_main_menu = load_main_menu
         self.master.protocol("WM_DELETE_WINDOW", self.on_close)
         self.done = False
-        self.status = tk.Label(self.master, text='')
-        self.status.grid(row=self.rows, column=0, columnspan=self.cols)
-        self.start_time = time.time()
-        self.elapsed_time = 0
-        self.update_status()
+        self.enable_timer = enable_timer
+        if self.enable_timer:
+            self.status = tk.Label(self.master, text='')
+            self.status.grid(row=self.rows, column=0, columnspan=self.cols)
+            self.start_time = time.time()
+            self.elapsed_time = 0
+            self.update_status()
 
     def create_widgets(self):
         # Set up frame
@@ -42,8 +44,8 @@ class Minesweeper:
         help_menu.add_command(label="Rule", command=self.Rule_Click)
         # Add Mine Count
         if self.mine_count_label is None:
-          self.mine_count_label = tk.Label(self.master, text=f"Mines: {self.mines}")
-          self.mine_count_label.grid(row=self.rows + 1, column=0, columnspan=self.cols, padx=50, pady=5)
+            self.mine_count_label = tk.Label(self.master, text=f"Mines: {self.mines}")
+            self.mine_count_label.grid(row=self.rows + 1, column=0, columnspan=self.cols, padx=50, pady=5)
         else:
             self.mine_count_label.config(text=f"Mines: {self.mines}")
         #Set up button
@@ -167,7 +169,7 @@ class Minesweeper:
     def save_state_and_destroy(self):
         self.save_game_state()    
         self.frame.destroy()
-        self.status.destroy()
+        if self.enable_timer: self.status.destroy()
         self.mine_count_label.destroy()
         self.menu_bar.destroy()
         self.load_main_menu(self.master)

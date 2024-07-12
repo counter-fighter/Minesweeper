@@ -80,13 +80,13 @@ class MainMenu:
         self.main_frame.destroy()
         match self.mode.get():
             case "Classic":
-                Minesweeper(self.root, self.board_size_var.get(), self.board_size_var.get(), self.get_mines(), load_main_menu)
+                Minesweeper(self.root, self.board_size_var.get(), self.board_size_var.get(), self.get_mines(), load_main_menu, timer_enabled)
             case "Liar":
-                Liar(self.root, self.board_size_var.get(), self.board_size_var.get(), self.get_mines(), load_main_menu)
+                Liar(self.root, self.board_size_var.get(), self.board_size_var.get(), self.get_mines(), load_main_menu, timer_enabled)
             case "Two Tiles Away":
-                TwoTilesAway(self.root, self.board_size_var.get(), self.board_size_var.get(), self.get_mines(), load_main_menu)
+                TwoTilesAway(self.root, self.board_size_var.get(), self.board_size_var.get(), self.get_mines(), load_main_menu, timer_enabled)
             case "Vertical and Horizontal Clue":
-                vnh_clue(self.root, self.board_size_var.get(), self.board_size_var.get(), self.get_mines(), load_main_menu)
+                vnh_clue(self.root, self.board_size_var.get(), self.board_size_var.get(), self.get_mines(), load_main_menu, timer_enabled)
             
     def continue_game(self):
         self.main_frame.destroy()

@@ -5,8 +5,8 @@ import json
 from minesweeper import Minesweeper
 
 class Liar(Minesweeper):
-    def __init__(self, master, rows, cols, mines, load_main_menu):
-        super().__init__(master, rows, cols, mines, load_main_menu)
+    def __init__(self, master, rows, cols, mines, load_main_menu, enable_timer):
+        super().__init__(master, rows, cols, mines, load_main_menu, enable_timer)
 
     def Rule_Click(self):
         messagebox.showinfo("Rule", "The number of the clue always overshoot or undershoot the true value E.g. If the clue says 2, the actual number of surrounding mine could be either 1 or 3.")
