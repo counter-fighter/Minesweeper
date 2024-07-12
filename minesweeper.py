@@ -162,7 +162,7 @@ class Minesweeper:
         self.load_main_menu(self.master)
 
     def Rule_Click(self):
-        messagebox.showinfo("Rule", "Explain the rule here :D")
+        messagebox.showinfo("Rule", "Some of these squares are a mine. If you click a mine, you lose. You can reveal a tile by left click and flagged that tile as a mine by right click. The number of the clue indicates how many mines in the 8 adjacent squares. Use logical deductions to determine which tile is safe to click and which tile to flag. Good luck :D")
 
     def on_close(self):
         self.save_game_state()
