@@ -1,6 +1,8 @@
 import tkinter as tk
 from tkinter import ttk, messagebox
 import json
+from os.path import exists
+from os import getcwd
 from minesweeper import Minesweeper
 from liar import Liar
 from two_tiles_away import TwoTilesAway
@@ -65,6 +67,15 @@ class MainMenu:
         # Add Quit Button
         quit_button = ttk.Button(self.main_frame, text="Quit", command=self.quit_game, style="Red.TButton")
         quit_button.grid(row=4, column=3, pady=20, padx=5, sticky=tk.EW)
+
+        
+        file_path = str(getcwd()) + '\\game_state.json'
+        file_path_fwd = str(getcwd()) + '/game_state.json'
+        
+        if not (exists(file_path) or exists(file_path_fwd)):
+            continue_button.state(["disabled"])
+        else:
+            continue_button.state(["!disabled"])
 
         # Add some spacing
         for child in self.main_frame.winfo_children():
