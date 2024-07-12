@@ -111,6 +111,7 @@ class Minesweeper:
         elif self.grid[r][c] > 0:
             self.buttons[(r, c)].config(text=str(self.grid[r][c]))
         else:
+            #Recursively reveal the surrounding cell if the other cell is also empty (stop when the cell is not empty)
             self.buttons[(r, c)].config(text="")
             for i in range(max(0, r-1), min(self.rows, r+2)):
                 for j in range(max(0, c-1), min(self.cols, c+2)):

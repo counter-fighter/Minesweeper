@@ -3,6 +3,7 @@ from tkinter import ttk, messagebox
 from minesweeper import Minesweeper
 from liar import Liar
 from two_tiles_away import TwoTilesAway
+from vnh_clue import vnh_clue
 
 class MainMenu:
     def __init__(self, root):
@@ -67,7 +68,7 @@ class MainMenu:
         self.mode = tk.StringVar(value="Classic")
         mode_label = ttk.Label(self.main_frame, text="Select Game Mode")
         mode_label.grid(row=3, column=0, sticky=tk.W, pady=5)
-        mode_options = ["Classic", "Liar", "Two Tiles Away"]
+        mode_options = ["Classic", "Liar", "Two Tiles Away","Vertical and Horizontal Clue"]
         for index, mode in enumerate(mode_options):
             ttk.Radiobutton(self.main_frame, text=mode, variable=self.mode, value=mode).grid(row=3, column=1+index, sticky=tk.W, padx=5)
     
@@ -84,7 +85,9 @@ class MainMenu:
                 Liar(self.root, self.board_size_var.get(), self.board_size_var.get(), self.get_mines(), load_main_menu)
             case "Two Tiles Away":
                 TwoTilesAway(self.root, self.board_size_var.get(), self.board_size_var.get(), self.get_mines(), load_main_menu)
-    
+            case "Vertical and Horizontal Clue":
+                vnh_clue(self.root, self.board_size_var.get(), self.board_size_var.get(), self.get_mines(), load_main_menu)
+            
     def continue_game(self):
         self.main_frame.destroy()
         Minesweeper(self.root, load_main_menu=load_main_menu).continue_game()
