@@ -6,6 +6,9 @@ class vnh_clue(Minesweeper):
     def __init__(self, master, rows, cols, mines, load_main_menu):
         super().__init__(master, rows, cols, mines, load_main_menu)
 
+    def Rule_Click(self):
+        messagebox.showinfo("Rule", "The clue refers to the tiles vertically and horizontally in the range of 2 tiles away from the number instead of the surrounding tiles.")
+
     def calculate_numbers(self):
         for r in range(self.rows):
             for c in range(self.cols):
