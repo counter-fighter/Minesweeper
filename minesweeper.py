@@ -1,6 +1,6 @@
 import json
 import random
-import time
+import time, datetime
 import tkinter as tk
 from tkinter import messagebox
 
@@ -22,7 +22,13 @@ class Minesweeper:
         self.setup_game()
         self.load_main_menu = load_main_menu
         self.master.protocol("WM_DELETE_WINDOW", self.on_close)
-        
+        self.done = False
+        self.status = tk.Label(self.master, text='')
+        self.status.grid(row=self.rows, column=0, columnspan=self.cols)
+        self.start_time = time.time()
+        self.elapsed_time = 0
+        self.update_status()
+
     def create_widgets(self):
         # Set up frame
         self.frame = tk.Frame(self.master)
@@ -37,7 +43,7 @@ class Minesweeper:
         # Add Mine Count
         if self.mine_count_label is None:
           self.mine_count_label = tk.Label(self.master, text=f"Mines: {self.mines}")
-          self.mine_count_label.grid(row=self.rows + 1, column=0, columnspan=self.cols, pady=5)
+          self.mine_count_label.grid(row=self.rows + 1, column=0, columnspan=self.cols, padx=50, pady=5)
         else:
             self.mine_count_label.config(text=f"Mines: {self.mines}")
         #Set up button
@@ -84,8 +90,10 @@ class Minesweeper:
             return
         self.reveal_cell(r, c)
         if self.grid[r][c] == -1:
+            self.done = True
             self.game_over(False)
         elif self.check_win():
+            self.done = True
             self.game_over(True)
 
     def on_right_click(self, r, c):
@@ -150,15 +158,18 @@ class Minesweeper:
             messagebox.showinfo("Minesweeper", "Congratulations, You won!")
         else:
             messagebox.showinfo("Minesweeper", "Game Over. You hit a mine.")
-        self.save_game_state()
-        self.frame.destroy()
-        self.mine_count_label.destroy()
-        self.load_main_menu(self.master)
+        self.save_state_and_destroy()
 
     def Main_Menu_Click(self):
+        self.done = True
+        self.save_state_and_destroy()
+    
+    def save_state_and_destroy(self):
         self.save_game_state()    
         self.frame.destroy()
+        self.status.destroy()
         self.mine_count_label.destroy()
+        self.menu_bar.destroy()
         self.load_main_menu(self.master)
 
     def Rule_Click(self):
@@ -229,3 +240,9 @@ class Minesweeper:
         except Exception as e:
             messagebox.showerror("Minesweeper", f"Failed to load game state: {e}")
   
+    def update_status(self):
+        self.elapsed_time = int(time.time() - self.start_time)
+        delta = str(datetime.timedelta(seconds=self.elapsed_time))
+        if not self.done:
+            self.status.config(text='Timer: 'f'{delta}')
+            self.master.after(1000, self.update_status)  # Run again after 1 second
